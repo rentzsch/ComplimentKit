@@ -28,6 +28,8 @@ Once in place, your app will post a Compliment request every time it's launched.
 
 One point of oddity in the above code is that we avoid the seemingly-fine `userInfo` and instead pass the request dictionary as a serialized ASCII plist. Unfortunately sandboxed apps are disallowed from sending distributed notifications with userInfos, so this is our work-around.
 
+To keep things simple, we completely ignore `userInfo`, so don't use it, even in situations you could.
+
 Subrequests
 -----------
 
@@ -59,3 +61,22 @@ Just add a `subrequests` array to your ComplimentRequest like so:
     }
 
 Notice you don't supply a path or an icon for subrequests.
+
+
+Scripting with Python
+---------------------
+
+You can also create the ComplimentRequest notifications with a simple Python script.
+
+    from Foundation import *
+
+
+    data = { 'name': 'MarkdownLive',
+    	 'url' : 'https://github.com/rentzsch/markdownlive'
+    }
+		
+    nc = Foundation.NSDistributedNotificationCenter.defaultCenter()
+
+    nc.postNotificationName_object_userInfo_options_(
+      "ComplimentRequest", NSDictionary.dictionaryWithDictionary_(data).description(), None,
+      NSNotificationDeliverImmediately);
